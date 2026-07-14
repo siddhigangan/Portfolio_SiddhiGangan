@@ -14,11 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
       );
     });
 
+    // Note: these groups already use the SVG "transform" attribute (translate)
+    // for their layout position. Animating CSS "transform" here would override
+    // that attribute and collapse every node to the same spot — so we only
+    // fade opacity, never touch transform.
     const nodes = document.querySelectorAll('#schema-svg .table-node');
     nodes.forEach((node, i) => {
       node.style.opacity = 0;
       node.animate(
-        [{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'translateY(0)' }],
+        [{ opacity: 0 }, { opacity: 1 }],
         { duration: 500, delay: 100 + i * 120, fill: 'forwards', easing: 'ease-out' }
       );
     });
