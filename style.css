@@ -1,12 +1,12 @@
 :root {
-  /* Color Palette — 1 Neutral Family + 1 Accent Color */
-  /* Neutral Family (Slate Grays) in RGB for opacity support */
-  --neutral-bg-rgb: 248, 250, 252;          /* Slate 50 */
-  --neutral-surface-rgb: 255, 255, 255;     /* White */
-  --neutral-text-primary-rgb: 15, 23, 42;   /* Slate 900 */
-  --neutral-text-secondary-rgb: 71, 85, 105;/* Slate 600 */
-  --neutral-border-rgb: 226, 232, 240;      /* Slate 200 */
-  --neutral-border-strong-rgb: 203, 213, 225;/* Slate 300 */
+  /* Color Palette — 1 Deep Neutral Family + 1 Glowing Accent */
+  /* Neutral Family (Deep Slate/Navy) in RGB for opacity support */
+  --neutral-bg-rgb: 11, 15, 25;             /* Deep slate background (#0B0F19) */
+  --neutral-surface-rgb: 17, 24, 39;        /* Card surface (#111827) */
+  --neutral-text-primary-rgb: 248, 250, 252;/* White/Slate 50 */
+  --neutral-text-secondary-rgb: 148, 163, 184;/* Muted text/Slate 400 */
+  --neutral-border-rgb: 30, 41, 59;         /* Border/Slate 800 */
+  --neutral-border-strong-rgb: 51, 65, 85;  /* Divider/Slate 700 */
 
   /* Derived CSS variables for standard usage */
   --neutral-bg: rgb(var(--neutral-bg-rgb));
@@ -16,22 +16,24 @@
   --neutral-border: rgb(var(--neutral-border-rgb));
   --neutral-border-strong: rgb(var(--neutral-border-strong-rgb));
 
-  /* One Accent Color (Teal Developer Aesthetic) */
-  --accent: #0D9488;                 /* Teal 700 */
-  --accent-hover: #0F766E;           /* Teal 800 */
-  --accent-tint: rgba(13, 148, 136, 0.05);
-  --accent-border: rgba(13, 148, 136, 0.18);
+  /* One Accent Color (Teal Glow) in RGB */
+  --accent-rgb: 20, 184, 166;         /* Teal 500 (#14B8A6) */
+  --accent: rgb(var(--accent-rgb));
+  --accent-hover: #2dd4bf;            /* Teal 400 (#2DD4BF) */
+  --accent-tint: rgba(var(--accent-rgb), 0.08);   /* Tag background tint */
+  --accent-border: rgba(var(--accent-rgb), 0.25); /* Tag border tint */
 
   /* Fonts */
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
 
-  /* Strict Type Scale (Only 5 sizes used site-wide, responsive) */
+  /* Strict Type Scale (Only 6 variables used site-wide, responsive) */
   --fs-hero: clamp(2.25rem, 5vw, 3.25rem);      /* Hero Name (H1) */
-  --fs-h2: clamp(1.5rem, 3.5vw, 1.875rem);      /* Section Headings (H2) */
+  --fs-heading: clamp(1.5rem, 3.5vw, 1.875rem);   /* Section Headings (H2) */
   --fs-title: 1.125rem;                         /* Card Titles, Nav links */
   --fs-body: 0.9375rem;                         /* Body copy, list items */
+  --fs-section-num: 0.875rem;                   /* Section index numbers */
   --fs-tag: 0.8125rem;                          /* Tags, buttons, eyebrows, details */
 
   /* Spacing Scale (4px/8px rhythm multiples) */
@@ -45,12 +47,16 @@
   --space-64: 4rem;     /* 64px */
   --space-96: 6rem;     /* 96px */
 
+  /* Grid spacing tokens */
+  --space-grid: var(--space-24);
+  --space-grid-large: var(--space-32);
+
   /* Shared Shape & Elevation Properties */
-  --radius-card: 10px;
-  --radius-button: 6px;
+  --radius-card: 12px;
+  --radius-button: 8px;
   --radius-chip: 6px;
-  --shadow-card: 0 4px 6px -1px rgba(15, 23, 42, 0.03), 0 2px 4px -1px rgba(15, 23, 42, 0.02);
-  --shadow-card-hover: 0 12px 20px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.08);
+  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.25);
+  --shadow-card-hover: 0 12px 30px -4px rgba(20, 184, 166, 0.12), 0 4px 10px -4px rgba(20, 184, 166, 0.08);
   --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -76,17 +82,17 @@ body {
   padding: 0 var(--space-32);
 }
 
-/* faint blueprint grid across whole page (softened opacity to 0.06) */
+/* faint blueprint grid across whole page (highly subtle white grid for dark mode) */
 .grid-overlay {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
   background-image:
-    linear-gradient(var(--neutral-border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--neutral-border) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 48px 48px;
-  opacity: 0.06;
+  opacity: 1;
 }
 
 main, .topbar { position: relative; z-index: 1; }
@@ -100,8 +106,8 @@ a {
 .topbar {
   position: sticky;
   top: 0;
-  background: rgba(var(--neutral-bg-rgb), 0.85);
-  backdrop-filter: blur(8px);
+  background: rgba(var(--neutral-bg-rgb), 0.75);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--neutral-border);
   z-index: 10;
 }
@@ -177,7 +183,7 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 500;
+  font-weight: 600;
   transition: all var(--transition-normal);
   border: 1px solid transparent;
 }
@@ -185,12 +191,12 @@ a {
 
 .btn-primary {
   background: var(--accent);
-  color: var(--neutral-surface);
-  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15);
+  color: #0b0f19; /* High-contrast dark text inside glowing button */
+  box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.35);
 }
 .btn-primary:hover {
   background: var(--accent-hover);
-  box-shadow: 0 6px 16px rgba(13, 148, 136, 0.25);
+  box-shadow: 0 6px 22px rgba(var(--accent-rgb), 0.55);
 }
 
 .btn-ghost {
@@ -203,13 +209,14 @@ a {
   border-color: var(--accent);
 }
 
+/* SVG hero elements refactored for dark mode compatibility */
 .hero-diagram svg { width: 100%; height: auto; }
-.table-node .table-head { fill: var(--neutral-text-primary); }
-.table-node .table-body { fill: var(--neutral-surface); stroke: var(--neutral-border); stroke-width: 1; }
+.table-node .table-head { fill: rgba(30, 41, 59, 0.8); }
+.table-node .table-body { fill: rgba(17, 24, 39, 0.85); stroke: rgba(255, 255, 255, 0.08); stroke-width: 1; }
 .table-node .table-title {
   font-family: var(--font-mono);
   font-size: var(--fs-tag);
-  fill: var(--neutral-surface);
+  fill: var(--neutral-text-primary);
   font-weight: 700;
 }
 .table-node .row {
@@ -220,7 +227,7 @@ a {
 .table-node .col-name { fill: var(--accent); font-weight: 700; }
 .table-node.small .table-title { font-size: var(--fs-tag); }
 .table-node.small .small-row { fill: var(--neutral-text-secondary); font-size: var(--fs-tag); }
-.links path { stroke-dasharray: 3 3; }
+.links path { stroke-dasharray: 3 3; stroke: rgba(255, 255, 255, 0.08); }
 
 /* SVG table node header styling to match chips */
 .table-node.small .table-head {
@@ -242,11 +249,10 @@ a {
 }
 
 /* ---------- SECTIONS ---------- */
-/* Standardized solid lines instead of dashed lines, increased breathing room spacing */
 .section { padding: var(--space-96) 0; border-top: 1px solid var(--neutral-border); }
 .section h2 {
   font-family: var(--font-display);
-  font-size: var(--fs-h2);
+  font-size: var(--fs-heading);
   margin: 0 0 var(--space-48);
   display: flex;
   align-items: center;
@@ -255,7 +261,7 @@ a {
 }
 .idx {
   font-family: var(--font-mono);
-  font-size: var(--fs-tag);
+  font-size: var(--fs-section-num);
   color: var(--accent);
   border: 1px solid var(--accent-border);
   background: var(--accent-tint);
@@ -265,10 +271,12 @@ a {
   line-height: 1;
 }
 
-/* Unified Card Styling (identical borders, border-radius, padding, shadows, and hover transitions) */
+/* Unified Card Styling — Translucent Glassmorphism with neon hover glow */
 .exp-card, .project-card, .edu-card {
-  background: var(--neutral-surface);
-  border: 1px solid var(--neutral-border);
+  background: rgba(var(--neutral-surface-rgb), 0.65);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: var(--radius-card);
   padding: var(--space-24);
   box-shadow: var(--shadow-card);
@@ -276,9 +284,9 @@ a {
 }
 
 .exp-card:hover, .project-card:hover, .edu-card:hover {
-  border-color: var(--accent);
+  border-color: rgba(var(--accent-rgb), 0.35);
   box-shadow: var(--shadow-card-hover);
-  transform: translateY(-4px);
+  transform: translateY(-5px);
 }
 
 /* experience */
@@ -306,7 +314,7 @@ a {
   transition: all var(--transition-normal);
 }
 .tag-chip:hover {
-  background: rgba(13, 148, 136, 0.15);
+  background: rgba(var(--accent-rgb), 0.15);
   border-color: var(--accent);
   color: var(--accent-hover);
 }
@@ -322,7 +330,7 @@ a {
 .project-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-24);
+  gap: var(--space-grid);
 }
 .project-card {
   display: flex;
@@ -347,13 +355,19 @@ a {
   border-bottom: 1px solid transparent;
 }
 .repo-link:hover { color: var(--accent-hover); border-color: var(--accent-hover); }
-.project-card p:last-child { color: var(--neutral-text-secondary); margin: 0; font-size: var(--fs-body); line-height: 1.6; }
+.project-card p:last-child {
+  color: var(--neutral-text-secondary);
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  flex-grow: 1; /* Pushes content and stretches cards uniformly */
+}
 
 /* skills */
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-24) var(--space-32);
+  gap: var(--space-grid) var(--space-grid-large);
 }
 .skill-col h4 {
   font-family: var(--font-mono);
@@ -368,7 +382,7 @@ a {
 .edu-grid {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
-  gap: var(--space-32);
+  gap: var(--space-grid-large);
 }
 .edu-card h3 { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-title); margin: 0 0 var(--space-8); line-height: 1.3; }
 .edu-meta { font-family: var(--font-mono); font-size: var(--fs-tag); color: var(--neutral-text-secondary); }
@@ -381,7 +395,7 @@ a {
   border-top: 1px solid var(--neutral-border);
   text-align: center;
 }
-.contact h2 { font-family: var(--font-display); font-size: var(--fs-h2); margin: 0 0 var(--space-24); line-height: 1.2; letter-spacing: -0.01em; }
+.contact h2 { font-family: var(--font-display); font-size: var(--fs-heading); margin: 0 0 var(--space-24); line-height: 1.2; letter-spacing: -0.01em; }
 .contact-links {
   display: flex;
   justify-content: center;
